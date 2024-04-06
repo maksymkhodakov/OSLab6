@@ -61,6 +61,12 @@ build CMakeFiles/OSLab6.dir/main.cpp.o: CXX_COMPILER__OSLab6_Debug /Users/maksym
   OBJECT_DIR = CMakeFiles/OSLab6.dir
   OBJECT_FILE_DIR = CMakeFiles/OSLab6.dir
 
+build CMakeFiles/OSLab6.dir/mainTask2.cpp.o: CXX_COMPILER__OSLab6_Debug /Users/maksymkhodakov/CLionProjects/OSLab6/mainTask2.cpp || cmake_object_order_depends_target_OSLab6
+  DEP_FILE = CMakeFiles/OSLab6.dir/mainTask2.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -std=gnu++17
+  OBJECT_DIR = CMakeFiles/OSLab6.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSLab6.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target OSLab6
@@ -69,7 +75,7 @@ build CMakeFiles/OSLab6.dir/main.cpp.o: CXX_COMPILER__OSLab6_Debug /Users/maksym
 #############################################
 # Link the executable OSLab6
 
-build OSLab6: CXX_EXECUTABLE_LINKER__OSLab6_Debug CMakeFiles/OSLab6.dir/mainStat.cpp.o CMakeFiles/OSLab6.dir/main.cpp.o
+build OSLab6: CXX_EXECUTABLE_LINKER__OSLab6_Debug CMakeFiles/OSLab6.dir/mainStat.cpp.o CMakeFiles/OSLab6.dir/main.cpp.o CMakeFiles/OSLab6.dir/mainTask2.cpp.o
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
   OBJECT_DIR = CMakeFiles/OSLab6.dir
   POST_BUILD = :
