@@ -3,7 +3,7 @@
 #include <mutex>
 #include <fstream>
 #include <thread>
-
+#include <chrono>
 
 namespace {
     constexpr size_t kMaxElement{100};
@@ -23,9 +23,9 @@ namespace {
     }
 
     void print_matrix(const Matrix<int> &matrix) {
+        std::lock_guard<std::mutex> lck{cout_mtx};
         for (const auto &row: matrix) {
             for (const auto &el: row) {
-                std::lock_guard lck{cout_mtx};
                 std::cout << el << " ";
             }
             std::cout << "\n";
@@ -54,56 +54,57 @@ namespace {
         for (size_t cntr = 0; cntr < m; ++cntr) {
             res += a[i][cntr] * b[cntr][j];
         }
-
-        {
-            std::lock_guard lck{cout_mtx};
-            std::cout << "[" << i << "," << j << "] = " << res << "\n";
-        }
     }
-
 }
 
-
-// ./a.out n m k isRand pathA pathB
 int main(int argc, char **argv) {
-
-    if (!(argc == 5 || (argc == 7 && std::stoi(argv[4]) == 0))) {
+    if (!(argc == 6 || (argc == 8 && std::stoi(argv[4]) == 0))) {
+        std::cerr << "Usage: " << argv[0] << " n m k isRand pathA pathB maxThreads\n";
         return -1;
     }
-    Matrix<int> first;
-    Matrix<int> second;
 
     size_t n = std::stoul(argv[1]);
     size_t m = std::stoul(argv[2]);
     size_t k = std::stoul(argv[3]);
+    size_t maxThreads = std::stoul(argv[argc - 1]); // New argument for max threads
 
-    if (argc == 5) {
+    Matrix<int> first, second;
+
+    if (std::stoi(argv[4]) == 1) {
         first = generate_rand_matrix(n, m);
         second = generate_rand_matrix(m, k);
-    }
-
-    if (argc == 7) {
+    } else if (argc == 8) {
         first = read_matrix_from_file(argv[5], n, m);
         second = read_matrix_from_file(argv[6], m, k);
     }
 
-
-    print_matrix(first);
-    print_matrix(second);
+    auto start = std::chrono::high_resolution_clock::now();
 
     std::vector<std::thread> threads;
-
     Matrix<int> res(n, std::vector<int>(k));
+
+    size_t threadsToUse = std::min(maxThreads, n * k);
 
     for (size_t i = 0; i < n; ++i) {
         for (size_t j = 0; j < k; ++j) {
-            threads.emplace_back(compute_el, std::ref(res[i][j]), first, second, i, j);
+            if (threads.size() < threadsToUse) {
+                threads.emplace_back(compute_el, std::ref(res[i][j]), std::cref(first), std::cref(second), i, j);
+            } else {
+                compute_el(res[i][j], first, second, i, j); // Compute directly if max threads reached
+            }
         }
     }
 
     for (auto &thrd: threads) {
-        thrd.join();
+        if (thrd.joinable()) {
+            thrd.join();
+        }
     }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration = end - start;
+
+    std::cout << "Computation with " << threadsToUse << " threads took " << duration.count() << " milliseconds.\n";
 
     print_matrix(res);
 
