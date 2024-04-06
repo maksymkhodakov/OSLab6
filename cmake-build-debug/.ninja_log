@@ -1,3 +1,7 @@
 # ninja log v5
 9	539	1712404386379298163	CMakeFiles/OSLab6.dir/main.cpp.o	98f88eef95d2bc73
 539	572	1712404386414116065	OSLab6	6f2c3b786d1383ff
+4	798	1712408922657552429	CMakeFiles/OSLab6.dir/lasttaskdemo.cpp.o	8dea0299c7ad6fdc
+3	910	1712408922770618438	CMakeFiles/OSLab6.dir/mainTask2.cpp.o	c3bf16723e0dc99a
+3	944	1712408922805361834	CMakeFiles/OSLab6.dir/mainStat.cpp.o	b8eae961e615e252
+3	951	1712408922809409528	CMakeFiles/OSLab6.dir/main.cpp.o	98f88eef95d2bc73
